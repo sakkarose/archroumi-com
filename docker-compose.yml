@@ -1,0 +1,18 @@
+services:
+  archroumi:
+    build: .
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.archroumi.rule=Host(`yourdomain.com`)"
+      - "traefik.http.routers.archroumi.entrypoints=websecure"
+      # Replace 'myresolver' with the name of the cert resolver configured in your traefik instance
+      - "traefik.http.routers.archroumi.tls.certresolver=myresolver"
+      - "traefik.http.services.archroumi.loadbalancer.server.port=3000"
+    networks:
+      - traefik-public
+
+networks:
+  # This assumes your Traefik network is named 'traefik-public' and is created externally
+  traefik-public:
+    external: true
